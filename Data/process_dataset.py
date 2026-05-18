@@ -29,6 +29,8 @@ def filter_non_helpful_feedback(df: pd.DataFrame) -> pd.DataFrame:
     """Keep feedback entries that were not marked as helpful."""
     return df.loc[df["helpful"].ne(True)].copy()
 
+def remove_non_english_feedback(df: pd.DataFrame) -> pd.DataFrame:
+    """TODO: Remove feedback entries that are not in English."""
 
 def process(raw_df: pd.DataFrame) -> pd.DataFrame:
     """Load, clean, and filter doc feedback."""
@@ -38,6 +40,9 @@ def process(raw_df: pd.DataFrame) -> pd.DataFrame:
         .pipe(clean_contact_nan)
         .pipe(filter_non_helpful_feedback)
     )
+
+
+    
 
 def main(args):
 
