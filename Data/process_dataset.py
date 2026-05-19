@@ -1,5 +1,6 @@
 # Usage: python process_dataset.py path/to/dataset.csv
 
+import os
 import argparse
 import pandas as pd
 
@@ -56,18 +57,22 @@ def main(args):
     # Process the dataset
     processed_feedback = process(dataset_copy)
     
-    # Save the processed feedback to a new CSV file
     # Extract dataset name from the input file path for naming the output file
-    output_file_name = args.file_path.replace(".csv", "")
-    processed_feedback.to_csv(f"processed_{output_file_name}.csv", index=False)
-    print(f"Processed feedback saved to 'processed_{output_file_name}.csv'.")
+    output_file_name = os.path.splitext(os.path.basename(args.file_path))[0]
+    
+    # Save the processed feedback to a new CSV file
+    output_csv_path = os.path.join(args.output_dir, f"processed_{output_file_name}.csv")
+    processed_feedback.to_csv(output_csv_path, index=False)
+    print(f"Processed feedback saved to '{output_csv_path}'.")
 
-    # Save procssed feedbak as a JSON file for use in the next step of the pipeline
-    processed_feedback.to_json(f"processed_{output_file_name}.json", orient="records", lines=True)
+    # Save processed feedback as a JSON file for use in the next step of the pipeline
+    output_json_path = os.path.join(args.output_dir, f"processed_{output_file_name}.json")
+    processed_feedback.to_json(output_json_path, orient="records", lines=True)
     print(f"Processed feedback saved to 'processed_{output_file_name}.json'.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process doc feedback dataset.")
     parser.add_argument("--file_path", help="Path to the CSV file containing the dataset.")
+    parser.add_argument("--output_dir", help="Directory to save the processed dataset.", default="ProcessedDataset")
     args = parser.parse_args()
     main(args)
