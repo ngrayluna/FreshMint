@@ -6,8 +6,10 @@ from chains.response_extraction import ResponseExtract
 from chains.escalation_check import ESCALATION_CHECK_CHAIN
 from langgraph.graph import END, START, StateGraph
 
+from prompts.escalation_criteria import ESCALATION_CRITERIA
 from utils.logging_config import LOGGER
 from utils.graph_utils import create_ticket
+#from utils.graph_utils import create_ticket, create_jira_ticket
 
 class GraphState(TypedDict):
     feedback: str
@@ -34,6 +36,7 @@ def create_ticket_node(state: GraphState) -> GraphState:
     """Create a Jira ticket for the feedback"""
     LOGGER.info("Creating a Jira ticket for the feedback...")
     create_ticket(state["feedback_extracted"])
+    #create_jira_ticket(state["feedback_extracted"])
     return state
 
 
@@ -53,14 +56,6 @@ def main(args):
     LOGGER.info("Starting the feedback processing graph.")
 
     ######## GRAPH DEFINITION ########
-
-    escalation_criteria = """
-- The user indicates that the documentation is outdated or incorrect.
-- The user expresses confusion or misunderstanding that could be resolved with clearer documentation.
-- The user provides specific suggestions for improving the documentation.
-- The feedback highlights a gap in the documentation that led to a negative experience.
-"""
-
     workflow = StateGraph(GraphState)
     workflow.add_node("check_escalation_status", check_escalation_status_node)
     workflow.add_node("create_ticket", create_ticket_node)
@@ -75,25 +70,38 @@ def main(args):
         },
     )
     FEEDBACK_GRAPH = workflow.compile()
-
     ##################################
 
     # Read file CSV file into a DataFrame
     data = pd.read_csv(args.input_file)
 
     # Step 1: Extract response information from the feedback messages. Store this info into the ResponseExtract model.
-    for index, row in data.iterrows():
-        test = ResponseExtract(
-            response_id=row['id'],
-            path=row['path'],
-            comment=row['comment'],
-            source=row['source'],
-            status=row['status'],
-            helpful=row['helpful'],
-            contact=row['contact'],
-            date_submitted=row['createdAt']
-        )
-        break
+    # for index, row in data.iterrows():
+    #     test = ResponseExtract(
+    #         response_id=row['id'],
+    #         path=row['path'],
+    #         comment=row['comment'],
+    #         source=row['source'],
+    #         status=row['status'],
+    #         helpful=row['helpful'],
+    #         contact=row['contact'],
+    #         date_submitted=row['createdAt']
+    #     )
+    #     break
+
+    entry_num = 5
+    test = ResponseExtract(
+        response_id=data.iloc[entry_num]['id'],
+        path=data.iloc[entry_num]['path'],
+        comment=data.iloc[entry_num]['comment'],
+        source=data.iloc[entry_num]['source'],
+        status=data.iloc[entry_num]['status'],
+        helpful=data.iloc[entry_num]['helpful'],
+        contact=data.iloc[entry_num]['contact'],
+        date_submitted=data.iloc[entry_num]['createdAt']
+    )
+
+
     LOGGER.info(f"Extracted response information: {test}")
 
     
@@ -103,6 +111,10 @@ def main(args):
     #         "escalation_criteria": escalation_criteria,
     #         "message": test.comment,
     #     }))
+
+
+    escalation_criteria = ESCALATION_CRITERIA
+    LOGGER.info(f"Using the following escalation criteria:\n{escalation_criteria}")
 
     # Test on a single feedback entry
     FEEDBACK_GRAPH.invoke({
