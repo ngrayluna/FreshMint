@@ -16,9 +16,8 @@ class ResponseExtract(BaseModel):
         description="The path or URL to the source document."
     )
 
-    date_submitted: str | None = Field(
+    date_submitted: datetime | None = Field(
         default=None,
-        repr=False,
         description="Timestamp when the feedback was submitted in YYYY-MM-DD format."
     )
 
@@ -42,15 +41,9 @@ class ResponseExtract(BaseModel):
         description="Email address the user provided for follow-up."
     )
 
-    @staticmethod
-    def _convert_string_to_date(date_str: str | None) -> date | None:
-        try:
-            return datetime.strptime(date_str, "%Y-%m-%d").date()
-        except Exception as e:
-            print(e)
-            return None
-        
     @computed_field
     @property
     def date_submitted_as_date(self) -> date | None:
-        return self._convert_string_to_date(self.date_submitted)
+        if self.date_submitted is None:
+            return None
+        return self.date_submitted.date()

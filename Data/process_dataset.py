@@ -33,6 +33,12 @@ def filter_non_helpful_feedback(df: pd.DataFrame) -> pd.DataFrame:
 def remove_non_english_feedback(df: pd.DataFrame) -> pd.DataFrame:
     """TODO: Remove feedback entries that are not in English."""
 
+def parse_created_at(df: pd.DataFrame) -> pd.DataFrame:
+    """Convert the 'createdAt' column to timezone-aware datetime objects."""
+    return df.assign(
+        createdAt=lambda d: pd.to_datetime(d["createdAt"], utc=True, errors="coerce")
+    )
+
 def process(raw_df: pd.DataFrame) -> pd.DataFrame:
     """Load, clean, and filter doc feedback."""
     return (
@@ -40,6 +46,7 @@ def process(raw_df: pd.DataFrame) -> pd.DataFrame:
         .pipe(clean_helpful_nan)
         .pipe(clean_contact_nan)
         .pipe(filter_non_helpful_feedback)
+        .pipe(parse_created_at)
     )
 
 
