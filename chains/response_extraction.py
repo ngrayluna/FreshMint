@@ -16,6 +16,11 @@ class ResponseExtract(BaseModel):
         description="The path or URL to the source document."
     )
 
+    comment: str | None = Field(
+        default=None,
+        description="The user's feedback comment."
+    )
+
     date_submitted: datetime | None = Field(
         default=None,
         description="Timestamp when the feedback was submitted in YYYY-MM-DD format."
