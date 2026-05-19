@@ -4,6 +4,9 @@ Automated triage for user feedback submitted through our Mintlify documentation 
 
 ## What it does
 
+<img width="3528" height="2038" alt="image" src="https://github.com/user-attachments/assets/2947011b-8dc1-4cbf-965b-3a968557d9d7" />
+
+
 Reads exported feedback (CSV) and runs each entry through a LangGraph workflow that:
 
 1. **Extracts** the response into a structured `ResponseExtract` model (id, path, comment, source, status, helpfulness, contact, timestamp).
