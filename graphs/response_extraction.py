@@ -1,11 +1,11 @@
 # from typing import TypedDict
 # from utils.logging_config import LOGGER
 # from chains.escalation_check import ESCALATION_CHECK_CHAIN
-# from chains.response_extraction import ResponseExtract
+# from chains.response_extraction import ResponseObject
 
 # class GraphState(TypedDict):
 #     feedback: str
-#     feedback_extracted: ResponseExtract | None
+#     response_object: ResponseObject | None
 #     escalation_text_criteria: str
 #     requires_escalation: bool
 #     follow_ups: dict[str, bool] | None

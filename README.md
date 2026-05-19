@@ -9,14 +9,14 @@ Automated triage for user feedback submitted through our Mintlify documentation 
 
 Reads exported feedback (CSV) and runs each entry through a LangGraph workflow that:
 
-1. **Extracts** the response into a structured `ResponseExtract` model (id, path, comment, source, status, helpfulness, contact, timestamp).
+1. **Extracts** the response into a structured `ResponseObject` model (id, path, comment, source, status, helpfulness, contact, timestamp).
 2. **Classifies** whether the feedback warrants a documentation update, using an LLM (`gpt-4o-mini`) checked against a configurable escalation criteria prompt.
 3. **Escalates** by creating a Jira ticket when the criteria are met; otherwise the workflow ends.
 
 ## Layout
 
 - `entrypoint.py` — builds and runs the LangGraph state machine
-- `chains/` — LLM chains (escalation check) and the `ResponseExtract` schema
+- `chains/` — LLM chains (escalation check) and the `ResponseObject` schema
 - `prompts/` — escalation criteria prompt
 - `utils/graph_utils.py` — Jira ticket creation (currently stubbed to log; live Jira call is staged)
 - `Data/` — raw exports, processing scripts, and a notebook for inspection

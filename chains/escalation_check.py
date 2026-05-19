@@ -13,11 +13,11 @@ escalation_prompt = ChatPromptTemplate.from_messages(
         (
             "system",
             """
-            Determine whether the following response received
+            Determine whether the following feedback
             from a user requires a documentation update based on the following
             criteria: {escalation_criteria}.
 
-            Here's the notice message:
+            Here's the feedback:
 
             {message}
             """,
