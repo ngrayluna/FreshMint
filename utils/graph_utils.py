@@ -5,7 +5,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 from utils.logging_config import LOGGER
-from chains.response_extraction import ResponseObject
+from schemas.response import ResponseObject
 
 load_dotenv()
 
