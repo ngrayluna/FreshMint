@@ -33,7 +33,7 @@ def check_escalation_status_node(state: GraphState) -> GraphState:
 def create_ticket_node(state: GraphState) -> GraphState:
     """Create a Jira ticket for the feedback"""
     LOGGER.info("Creating a Jira ticket for the feedback...")
-    create_ticket(state["requires_escalation"])
+    create_ticket(state["feedback_extracted"])
     return state
 
 
@@ -65,9 +65,9 @@ def main(args):
     workflow.add_node("check_escalation_status", check_escalation_status_node)
     workflow.add_node("create_ticket", create_ticket_node)
 
-    workflow.add_edge(START, check_escalation_status_node)
-    workflow.add_conditional_edge(
-        "check_escalation_status_node",
+    workflow.add_edge(START, "check_escalation_status")
+    workflow.add_conditional_edges(
+        "check_escalation_status",
         route_escalation_status_edge,
         {
             "create_ticket": "create_ticket",
@@ -105,7 +105,12 @@ def main(args):
     #     }))
 
     # Test on a single feedback entry
-    FEEDBACK_GRAPH.invoke(test)
+    FEEDBACK_GRAPH.invoke({
+        "feedback": test.comment,
+        "feedback_extracted": test,
+        "escalation_text_criteria": escalation_criteria,
+        "requires_escalation": False,
+    })
         
 
 if __name__ == "__main__":

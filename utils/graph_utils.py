@@ -1,11 +1,9 @@
-
 from utils.logging_config import LOGGER
+from chains.response_extraction import ResponseExtract
 
-def create_ticket(requires_escalation: bool) -> str:
+def create_ticket(response: ResponseExtract) -> str:
     """Create a Jira ticket for the feedback, with different handling based on escalation status."""
-    if requires_escalation:
-        LOGGER.info("Creating Jira ticket for escalated feedback...")
-        # Logic to create a Jira ticket for escalated feedback
-        # This could involve using the Jira API to create a ticket with specific fields
-        # related to the feedback and its escalation status.
-        return "escalated_ticket_id"  # Placeholder for the created ticket ID
+    LOGGER.info("Creating Jira ticket for escalated feedback...")
+    LOGGER.info(f"  response_id:    {response.response_id}")
+    LOGGER.info(f"  date_submitted: {response.date_submitted}")
+    LOGGER.info(f"  comment:        {response.comment}")
