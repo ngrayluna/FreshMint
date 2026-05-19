@@ -1,11 +1,10 @@
 import argparse
 import pandas as pd
 from typing import TypedDict
-
-from chains.response_extraction import ResponseObject
-from chains.escalation_check import ESCALATION_CHECK_CHAIN
 from langgraph.graph import END, START, StateGraph
 
+from schemas.response import ResponseObject
+from chains.escalation_check import ESCALATION_CHECK_CHAIN
 from prompts.escalation_criteria import ESCALATION_CRITERIA
 from utils.logging_config import LOGGER
 from utils.graph_utils import create_ticket

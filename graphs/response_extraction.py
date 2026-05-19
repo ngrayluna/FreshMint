@@ -1,7 +1,7 @@
 # from typing import TypedDict
 # from utils.logging_config import LOGGER
 # from chains.escalation_check import ESCALATION_CHECK_CHAIN
-# from chains.response_extraction import ResponseObject
+# from schemas.response import ResponseObject
 
 # class GraphState(TypedDict):
 #     feedback: str
