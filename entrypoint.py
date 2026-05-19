@@ -116,6 +116,10 @@ def main(args):
     escalation_criteria = ESCALATION_CRITERIA
     LOGGER.info(f"Using the following escalation criteria:\n{escalation_criteria}")
 
+    # image = FEEDBACK_GRAPH.get_graph().draw_mermaid_png()
+    # with open("notice_extraction_graph.png", mode="wb") as f:
+    #     f.write(image)
+
     # Test on a single feedback entry
     FEEDBACK_GRAPH.invoke({
         "feedback": test.comment,
