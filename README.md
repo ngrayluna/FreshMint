@@ -1,4 +1,4 @@
-# MintFeedback
+# MintFresh
 
 Automated triage for user feedback submitted through our Mintlify documentation site.
 
