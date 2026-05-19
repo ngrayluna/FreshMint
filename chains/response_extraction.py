@@ -5,7 +5,7 @@ BaseModel that defines the structure of the response extraction output. This mod
 from datetime import datetime, date
 from pydantic import BaseModel, Field, computed_field
 
-class ResponseExtract(BaseModel):
+class ResponseObject(BaseModel):
     response_id: str | None = Field(
         default=None,
         description="The unique identifier for the response."

@@ -2,18 +2,17 @@ import argparse
 import pandas as pd
 from typing import TypedDict
 
-from chains.response_extraction import ResponseExtract
+from chains.response_extraction import ResponseObject
 from chains.escalation_check import ESCALATION_CHECK_CHAIN
 from langgraph.graph import END, START, StateGraph
 
 from prompts.escalation_criteria import ESCALATION_CRITERIA
 from utils.logging_config import LOGGER
 from utils.graph_utils import create_ticket
-#from utils.graph_utils import create_ticket, create_jira_ticket
 
 class GraphState(TypedDict):
     feedback: str
-    feedback_extracted: ResponseExtract | None
+    response_object: ResponseObject | None
     escalation_text_criteria: str
     requires_escalation: bool
 
@@ -35,8 +34,7 @@ def check_escalation_status_node(state: GraphState) -> GraphState:
 def create_ticket_node(state: GraphState) -> GraphState:
     """Create a Jira ticket for the feedback"""
     LOGGER.info("Creating a Jira ticket for the feedback...")
-    create_ticket(state["feedback_extracted"])
-    #create_jira_ticket(state["feedback_extracted"])
+    create_ticket(state["response_object"])
     return state
 
 
@@ -75,9 +73,9 @@ def main(args):
     # Read file CSV file into a DataFrame
     data = pd.read_csv(args.input_file)
 
-    # Step 1: Extract response information from the feedback messages. Store this info into the ResponseExtract model.
+    # Step 1: Extract response information from the feedback messages. Store this info into the ResponseObject model.
     # for index, row in data.iterrows():
-    #     test = ResponseExtract(
+    #     test = ResponseObject(
     #         response_id=row['id'],
     #         path=row['path'],
     #         comment=row['comment'],
@@ -90,7 +88,7 @@ def main(args):
     #     break
 
     entry_num = 5
-    test = ResponseExtract(
+    test = ResponseObject(
         response_id=data.iloc[entry_num]['id'],
         path=data.iloc[entry_num]['path'],
         comment=data.iloc[entry_num]['comment'],
@@ -123,7 +121,7 @@ def main(args):
     # Test on a single feedback entry
     FEEDBACK_GRAPH.invoke({
         "feedback": test.comment,
-        "feedback_extracted": test,
+        "response_object": test,
         "escalation_text_criteria": escalation_criteria,
         "requires_escalation": False,
     })
